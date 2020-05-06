@@ -1,5 +1,5 @@
 from room import Room
-
+from player import Hero
 # Declare all the rooms
 
 room = {
@@ -23,21 +23,34 @@ earlier adventurers. The only exit is to the south."""),
 
 
 # Link rooms together
-
-room['outside'].n_to = room['foyer']
-room['foyer'].s_to = room['outside']
-room['foyer'].n_to = room['overlook']
-room['foyer'].e_to = room['narrow']
-room['overlook'].s_to = room['foyer']
-room['narrow'].w_to = room['foyer']
-room['narrow'].n_to = room['treasure']
-room['treasure'].s_to = room['narrow']
+# print(room['foyer'])
+room['outside'].set_path('n', room['foyer']) 
+room['foyer'].set_path("s", room['outside'])
+room['foyer'].set_path("n", room['overlook'])
+room['foyer'].set_path("e", room['narrow'])
+room['overlook'].set_path("s", room['foyer'])
+room['narrow'].set_path("w", room['foyer'])
+room['narrow'].set_path("n", room['treasure'])
+room['treasure'].set_path("s", room['narrow'])
+# room['outside'].n = room['foyer']
+# room['foyer'].s = room['outside']
+# room['foyer'].n = room['overlook']
+# room['foyer'].e = room['narrow']
+# room['overlook'].s = room['foyer']
+# room['narrow'].w = room['foyer']
+# room['narrow'].n = room['treasure']
+# room['treasure'].s = room['narrow']
 
 #
 # Main
 #
 
+hero_name = input("Select your name Hero! ")
 # Make a new player object that is currently in the 'outside' room.
+hero = Hero(hero_name, room['outside'])
+##### Attempting to have users create their own hero name
+
+
 
 # Write a loop that:
 #
@@ -49,3 +62,32 @@ room['treasure'].s_to = room['narrow']
 # Print an error message if the movement isn't allowed.
 #
 # If the user enters "q", quit the game.
+
+directions = ['n', 'e', 's', 'w']
+
+print(f"\n{hero.name}, you start your journey here \n")
+
+while True:
+    # print the current room
+    # print room/enviroment descriptions
+    # print input instructions
+    print(f"\n You enter the {hero.current_room}")
+    print("\n[N]orth \n[E]ast \n[S]outh \n[W]est \n[Q]uit")
+
+    user_input = input("\nChoose your action: ").lower()
+    # A way to exit the loop
+    if user_input == "q":
+        print("Your game session has closed, have a good day!")
+        break
+
+    elif user_input in directions:
+        # move the hero have a try/except block for validation and error handling
+        # try:
+        hero.go_to_path(user_input)
+        print(f"you move to the {user_input} room")
+
+        # except:
+        #     print(f"uInput {user_input}")
+        #     print("There is no path in that direction")
+    else:
+        print("Invalid input, try again")
