@@ -1,51 +1,47 @@
-from room import Room
+from rooms_file import room
+from player import Hero
 
-# Declare all the rooms
+# Character Creation and Intro
+hero_name = input("\n\n\nSelect your name Hero!: ")
+hero = Hero(hero_name, room['outside'])
 
-room = {
-    'outside':  Room("Outside Cave Entrance",
-                     "North of you, the cave mount beckons"),
+print(f"\n\n\n{hero.name}, you start your journey here")
+print(f"\n{hero.current_room}")
+print("\n\nInputs \n[N]orth [E]ast [S]outh [W]est [Q]uit [M]enu")
 
-    'foyer':    Room("Foyer", """Dim light filters in from the south. Dusty
-passages run north and east."""),
+directions = ['n', 'e', 's', 'w']
 
-    'overlook': Room("Grand Overlook", """A steep cliff appears before you, falling
-into the darkness. Ahead to the north, a light flickers in
-the distance, but there is no way across the chasm."""),
+# Menu Loop/controller
+def menu():
+    while True:
+        user_input = input("View: [I]ventory [E]quipped-Items or [Ex]it-menu: ").lower()
 
-    'narrow':   Room("Narrow Passage", """The narrow passage bends here from west
-to north. The smell of gold permeates the air."""),
+        if user_input == "ex":
+            break
+        elif user_input == "i":
+            print('INV feature not implemented yet!')
+            break
+        elif user_input == "e":
+            print("EQUP feature not implemented yet!")
+            break
+        else:
+            print("Invalid Input! Try Again...")
 
-    'treasure': Room("Treasure Chamber", """You've found the long-lost treasure
-chamber! Sadly, it has already been completely emptied by
-earlier adventurers. The only exit is to the south."""),
-}
+# Main Loop/controller
+while True:
+    user_input = input("\nChoose your action: ").lower()
 
+    if user_input == "q":
+        print("Your game session has closed, have a good day!")
+        break
 
-# Link rooms together
+    elif user_input in directions:
+        hero.go_to_path(user_input)
 
-room['outside'].n_to = room['foyer']
-room['foyer'].s_to = room['outside']
-room['foyer'].n_to = room['overlook']
-room['foyer'].e_to = room['narrow']
-room['overlook'].s_to = room['foyer']
-room['narrow'].w_to = room['foyer']
-room['narrow'].n_to = room['treasure']
-room['treasure'].s_to = room['narrow']
+    elif user_input == "m":
+        menu()
+        
+    else:
+        print("Invalid Input! Try Again... ")
 
-#
-# Main
-#
-
-# Make a new player object that is currently in the 'outside' room.
-
-# Write a loop that:
-#
-# * Prints the current room name
-# * Prints the current description (the textwrap module might be useful here).
-# * Waits for user input and decides what to do.
-#
-# If the user enters a cardinal direction, attempt to move to the room there.
-# Print an error message if the movement isn't allowed.
-#
-# If the user enters "q", quit the game.
+    hero.display_stats()
